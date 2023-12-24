@@ -1,0 +1,16 @@
+{
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "express-jwt": "^8.4.1",
+    "nodemon": "^3.0.1",
+    "sqlite": "^5.0.1",
+    "sqlite3": "^5.1.6"
+  },
+  "scripts": {
+    "dev": "nodemon --exec",
+    "seed": "node sql/seed.js"
+  },
+  "type": "module"
+}

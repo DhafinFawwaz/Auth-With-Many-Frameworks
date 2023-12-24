@@ -1,3 +1,3 @@
 echo [Running Client]
-cd client
+cd client-next
 npm run dev

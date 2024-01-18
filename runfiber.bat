@@ -1,3 +1,3 @@
-echo [Initializing Django]
+echo [Running Server]
 cd server-fiber
-go run cmd/main.go
+go run main.go

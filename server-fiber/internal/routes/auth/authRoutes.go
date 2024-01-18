@@ -11,7 +11,6 @@ func SetupAuthPublicRoutes(router fiber.Router) {
 
 	auth.Post("/register", authHandler.Register)
 	auth.Post("/login", authHandler.Login)
-	auth.Post("/", authHandler.Authenticate)
 
 	auth.Get("/login", authHandler.GetAllMahasiswa) // Debug
 }

@@ -26,7 +26,7 @@ func GenerateJWT(mahasiswa models.Mahasiswa) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 
 	// Generate encoded token and send it as response.
-	t, err := token.SignedString(config.GetEnv("JWT_SECRET"))
+	t, err := token.SignedString([]byte(config.GetEnv("JWT_SECRET")))
 	if err != nil {
 		return "", err
 	}

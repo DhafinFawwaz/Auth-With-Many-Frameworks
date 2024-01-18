@@ -38,11 +38,6 @@ class TodoListApiView(APIView):
 
 class RegisterApiView(APIView):
     permission_classes = [IsNotAuthenticated]
-
-    # 1. List all
-    def get(self, request, *args, **kwargs):
-        users = Mahasiswa.objects.all()
-        return Response(users.values(), status=status.HTTP_200_OK)
     
     # 2. Create
     def post(self, request, *args, **kwargs):
@@ -55,12 +50,12 @@ class RegisterApiView(APIView):
 
 class LoginApiView(APIView):
     permission_classes = [IsNotAuthenticated]
-
-    # 1. List all
+   
+    # 1. List all for debugging, remove this later
     def get(self, request, *args, **kwargs):
         users = Mahasiswa.objects.all()
         return Response(users.values(), status=status.HTTP_200_OK)
-    
+
     # 2. Login
     def post(self, request, *args, **kwargs):
         try:

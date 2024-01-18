@@ -7,7 +7,12 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/logger"
 )
 
-func SetupRoutes(app *fiber.App) {
+func SetupPublicRoutes(app *fiber.App) {
 	api := app.Group("/api", logger.New())
-	authRoutes.SetupAuthRoutes(api)
+	authRoutes.SetupAuthPublicRoutes(api)
+}
+
+func SetupProtectedRoutes(app *fiber.App) {
+	api := app.Group("/api", logger.New())
+	authRoutes.SetupAuthProtectedRoutes(api)
 }

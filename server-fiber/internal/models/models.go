@@ -3,20 +3,26 @@ package models
 import (
 	"time"
 
-	"github.com/google/uuid"
+	"github.com/lib/pq"
 )
 
 type Mahasiswa struct {
-	id           uuid.UUID
-	password     string
-	last_login   time.Time
-	is_superuser bool
-	username     string
-	first_name   string
-	last_name    string
-	email        string
-	is_staff     bool
-	is_active    bool
-	date_joined  time.Time
-	nim          string
+	ID          int         `json:"id"`
+	Password    string      `json:"password"`
+	LastLogin   pq.NullTime `json:"last_login"`
+	IsSuperuser bool        `json:"is_superuser"`
+	Username    string      `json:"username"`
+	FirstName   string      `json:"first_name"`
+	LastName    string      `json:"last_name"`
+	Email       string      `json:"email"`
+	IsStaff     bool        `json:"is_staff"`
+	IsActive    bool        `json:"is_active"`
+	DateJoined  time.Time   `json:"date_joined"`
+	NIM         string      `json:"nim"`
+}
+
+type AuthenticatedMahasiswa struct {
+	AccessToken  string `json:"accessToken"`
+	RefreshToken string `json:"refreshToken"`
+	Mahasiswa
 }

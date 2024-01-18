@@ -6,12 +6,16 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-func SetupAuthRoutes(router fiber.Router) {
+func SetupAuthPublicRoutes(router fiber.Router) {
 	auth := router.Group("/auth")
 
 	auth.Post("/register", authHandler.Register)
 	auth.Post("/login", authHandler.Login)
 	auth.Post("/", authHandler.Authenticate)
 
-	auth.Get("/", authHandler.GetAllMahasiswa) // Debug
+	auth.Get("/login", authHandler.GetAllMahasiswa) // Debug
+}
+func SetupAuthProtectedRoutes(router fiber.Router) {
+	auth := router.Group("/auth")
+	auth.Post("/", authHandler.Authenticate)
 }

@@ -36,10 +36,10 @@ return [
     */
 
     'guards' => [
-        'web' => [
-            'driver' => 'session',
-            'provider' => 'user_api_mahasiswa',
-        ],
+        // 'web' => [
+        //     'driver' => 'session',
+        //     'provider' => 'user_api_mahasiswa',
+        // ],
         
         'api' => [
             'driver' => 'jwt',

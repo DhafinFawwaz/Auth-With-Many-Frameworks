@@ -13,8 +13,9 @@ class AuthController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['login','register']]);
+        $this->middleware('auth:api', ['except' => ['login', 'register', 'getAllMahasiswa']]);
     }
+
     private function generateJWT($mahasiswa)
     {
         $expirationTime = time() + 3600*24*365; // jwt valid for 1 hour from the issued time
@@ -27,22 +28,13 @@ class AuthController extends Controller
             // "expiration_date" =>    $expirationTime,
         );
 
-        error_log($mahasiswa->password);
-        $token = Auth::attempt($credentials);
-        error_log($mahasiswa->password);
-
-        if (!$token) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Unauthorized',
-            ], 401);
+        if (! $token = auth()->attempt($credentials)) {
+            return response()->json(['error' => 'Unauthorized'], 401);
         }
-        $access_token = Auth::user()->getRememberToken();
-        // $access_token = Auth::user()->getRememberToken();
 
-        // $credentials['expiration_date'] = $expirationTime;
-        return $access_token;
+        return $token;
     }
+
     public function login(Request $request)
     {
         $content = $request->getContent();

@@ -1,6 +1,6 @@
 module fiber-auth-template
 
-go 1.21.5
+go 1.21
 
 require (
 	github.com/MicahParks/keyfunc/v2 v2.1.0 // indirect

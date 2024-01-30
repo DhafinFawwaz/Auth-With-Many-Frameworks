@@ -1,23 +1,37 @@
-FROM golang:1.21.5-alpine AS builder
+# Building the binary of the App
+FROM golang:1.19 AS build
 
-# Move to working directory (/build).
-WORKDIR /server-fiber
+# `boilerplate` should be replaced with your project name
+WORKDIR /go/src/fiber-auth
 
-# Copy and download dependency using go mod.
-COPY go.mod go.sum ./
-RUN go mod download
-
-# Copy the code into the container.
+# Copy all the Code and stuff to compile everything
 COPY . .
 
-# Set necessary environment variables needed for our image and build the API server.
-ENV CGO_ENABLED=0 GOOS=linux GOARCH=amd64
-RUN go build -ldflags="-s -w" -o apiserver .
+# Downloads all the dependencies in advance (could be left out, but it's more clear this way)
+RUN go mod download
 
-FROM scratch
+# Builds the application as a staticly linked one, to allow it to run on alpine
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -installsuffix cgo -o app .
 
-# Copy binary and config files from /build to root folder of scratch container.
-COPY --from=builder ["/build/apiserver", "/build/.env", "/"]
 
-# Command to run when starting the container.
-ENTRYPOINT ["/apiserver"]
+# Moving the binary to the 'final Image' to make it smaller
+FROM alpine:latest as release
+
+WORKDIR /app
+
+# Create the `public` dir and copy all the assets into it
+RUN mkdir ./static
+COPY ./static ./static
+
+# `boilerplate` should be replaced here as well
+COPY --from=build /go/src/boilerplate/app .
+
+# Add packages
+RUN apk -U upgrade \
+    && apk add --no-cache dumb-init ca-certificates \
+    && chmod +x /app/app
+
+# Exposes port 3000 because our program listens on that port
+EXPOSE 3000
+
+ENTRYPOINT ["/usr/bin/dumb-init", "--"]

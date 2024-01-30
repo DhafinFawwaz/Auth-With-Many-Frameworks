@@ -24,7 +24,7 @@ RUN mkdir ./static
 COPY ./static ./static
 
 # `boilerplate` should be replaced here as well
-COPY --from=build /go/src/boilerplate/app .
+COPY --from=build /go/src/fiber-auth/app .
 
 # Add packages
 RUN apk -U upgrade \

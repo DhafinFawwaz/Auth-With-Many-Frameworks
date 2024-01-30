@@ -5,7 +5,7 @@ export function authenticateToken(req, res, next) {
     
     const token = authHeader && authHeader.split(' ')[1];
     if (token == null) return res.sendStatus(401);
-    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, data) => {
+    jwt.verify(token, process.env.JWT_SECRET, (err, data) => {
         if (err) return res.sendStatus(403);
         req.body.email = data.email;
         req.body.id = data.id;
@@ -14,5 +14,5 @@ export function authenticateToken(req, res, next) {
 }
 
 export function generateAccessToken(data) {
-    return jwt.sign(data, process.env.ACCESS_TOKEN_SECRET);
+    return jwt.sign(data, process.env.JWT_SECRET);
 }

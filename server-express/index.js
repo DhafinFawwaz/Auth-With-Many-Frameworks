@@ -11,7 +11,7 @@ const app = express();
 dotenv.config();
 
 app.use(expressjwt({
-    secret: process.env.ACCESS_TOKEN_SECRET,
+    secret: process.env.JWT_SECRET,
     algorithms: ['HS256'],
 }).unless({
     path: [

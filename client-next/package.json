@@ -1,5 +1,5 @@
 {
-  "name": "next-django-auth-template",
+  "name": "next-auth-template",
   "version": "0.1.0",
   "private": true,
   "scripts": {

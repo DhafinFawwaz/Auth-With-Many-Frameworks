@@ -1,0 +1,12 @@
+version: '3'
+
+services:
+  app:
+    image: golang:latest
+    container_name: fiber-auth
+    working_dir: /app
+    ports:
+      - "8080:8080"
+    volumes:
+      - .:/app
+    command: go run main.go

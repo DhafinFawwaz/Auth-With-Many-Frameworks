@@ -19,3 +19,7 @@ func DB_PORT() string {
 func DB_NAME() string {
 	return GetEnv("DB_NAME")
 }
+
+func DB_HOST() string {
+	return GetEnv("DB_HOST")
+}

@@ -12,13 +12,15 @@ import (
 var DB *sql.DB
 
 func ConnectDatabase() {
-	fmt.Println("Connecting to database...")
-	connStr := fmt.Sprintf("%s:%s@tcp(database:%s)/%s?parseTime=true",
+	fmt.Printf("Connecting to database...\n")
+	connStr := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?parseTime=true",
 		config.DB_USERNAME(),
 		config.DB_PASSWORD(),
+		config.DB_HOST(),
 		config.DB_PORT(),
 		config.DB_NAME(),
 	)
+	fmt.Println("Connection String:\n" + connStr)
 	db, err := sql.Open("mysql", connStr)
 	if err != nil {
 		fmt.Println("Error connecting to database")

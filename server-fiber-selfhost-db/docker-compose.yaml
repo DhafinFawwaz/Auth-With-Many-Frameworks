@@ -1,0 +1,37 @@
+services:
+  server:
+    image: golang:latest
+    container_name: fiber-auth
+    working_dir: /app
+    environment:
+      JWT_KEY: 123456
+      DB_PASSWORD: supersecretpassword
+      DB_USERNAME: user
+      DB_NAME: kampus
+      DB_PORT: 3306
+    ports:
+      - "8080:8080"
+    volumes:
+      - .:/app
+    command: go run main.go
+    depends_on:
+      database:
+        condition: service_healthy
+  database:
+    image: mariadb:latest
+    container_name: fiber-auth-db
+    working_dir: /db
+    environment:
+      MYSQL_ROOT_PASSWORD: supersecretpassword
+      MYSQL_DATABASE: kampus
+      MYSQL_USER: user
+      MYSQL_PASSWORD: supersecretpassword
+    volumes:
+      - "./data:/var/lib/mysql"
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      start_period: 3s
+      interval: 5s
+      timeout: 5s
+      retries: 3
+      

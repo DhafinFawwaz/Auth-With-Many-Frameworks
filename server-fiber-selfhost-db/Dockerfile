@@ -1,32 +1,23 @@
+# Use the official Golang image as a base image
 FROM golang:latest
 
-RUN apt-get update && \
-    apt-get install -y mariadb-client mariadb-server && \
-    service mariadb start && \
-    mysql -e "CREATE DATABASE IF NOT EXISTS kampus;"
-
+# Set the working directory inside the container
 WORKDIR /app
 
+# Copy go.mod and go.sum files to download dependencies
 COPY go.mod go.sum ./
+
+# Download dependencies
 RUN go mod download
 
+# Copy the local package files to the container's working directory
 COPY . .
 
+# Build the Go application
 RUN go build -o main .
 
-ENV DB_HOST=localhost
-ENV DB_PORT=3306
-ENV DB_USERNAME=user
-ENV DB_PASSWORD=supersecretpassword
-ENV DB_NAME=kampus
-ENV MYSQL_ROOT_PASSWORD=supersecretpassword
-ENV MYSQL_DATABASE=kampus
-ENV MYSQL_USER=user
-ENV MYSQL_PASSWORD=supersecretpassword
-
+# Expose the port the app runs on
 EXPOSE 8080
 
-COPY entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh
-
-ENTRYPOINT ["/entrypoint.sh"]
+# Command to run the executable
+CMD ["./main"]

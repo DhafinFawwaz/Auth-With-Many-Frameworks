@@ -1,0 +1,16 @@
+FROM mariadb:latest
+
+WORKDIR /db
+
+ENV MYSQL_ROOT_PASSWORD=supersecretpassword
+ENV MYSQL_DATABASE=kampus
+ENV MYSQL_USER=user
+ENV MYSQL_PASSWORD=supersecretpassword
+
+COPY ./data /var/lib/mysql
+
+COPY healthcheck.sh /usr/local/bin/healthcheck.sh
+RUN chmod +x /usr/local/bin/healthcheck.sh
+
+HEALTHCHECK --interval=5s --timeout=5s --start-period=3s --retries=3 \
+  CMD ["healthcheck.sh", "--connect", "--innodb_initialized"]

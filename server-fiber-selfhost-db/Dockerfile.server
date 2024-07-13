@@ -1,0 +1,15 @@
+FROM golang:latest
+
+WORKDIR /app
+
+COPY . .
+
+ENV JWT_KEY=123456
+ENV DB_PASSWORD=supersecretpassword
+ENV DB_USERNAME=user
+ENV DB_NAME=kampus
+ENV DB_PORT=3306
+
+EXPOSE 8080
+
+CMD ["go", "run", "main.go"]

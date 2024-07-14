@@ -1,10 +1,10 @@
 import NextAuth, { DefaultSession, User } from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials";
-import data from "@/app/data/data.json"
 import { getServerSession } from 'next-auth';
 import { redirect } from "next/navigation";
 
 import type { NextAuthOptions } from 'next-auth'
+import { ENV } from "../../env";
 
 type UserData = {
     username: string;
@@ -19,7 +19,7 @@ export interface UserSession extends DefaultSession {
 }
 
 export const authOptions: NextAuthOptions = {
-    secret: process.env.AUTH_SECRET,
+    secret: ENV.AUTH_SECRET,
     session: {
         strategy: "jwt",
     },
@@ -41,7 +41,7 @@ export const authOptions: NextAuthOptions = {
         },
         async authorize(credentials) {
 
-          const url = `${process.env.API_URL}/api/auth/login/`;
+          const url = `${ENV.API_URL}/api/auth/login/`;
           const res = await fetch(url, {
             method: "POST",
             body: JSON.stringify(credentials),

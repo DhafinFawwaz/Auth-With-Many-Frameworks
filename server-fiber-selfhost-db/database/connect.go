@@ -6,22 +6,49 @@ import (
 
 	"database/sql"
 
-	_ "github.com/go-sql-driver/mysql"
+	// _ "github.com/go-sql-driver/mysql"
+	_ "github.com/lib/pq"
 )
 
 var DB *sql.DB
 
 func ConnectDatabase() {
 	fmt.Printf("Connecting to database...\n")
-	connStr := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?parseTime=true",
-		config.DB_USERNAME(),
-		config.DB_PASSWORD(),
-		config.DB_HOST(),
-		config.DB_PORT(),
-		config.DB_NAME(),
-	)
+
+	var connStr string
+	var db *sql.DB
+	var err error
+
+	if config.DB_TYPE() == "postgres" {
+		connStr = fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=disable",
+			config.DB_USERNAME(),
+			config.DB_PASSWORD(),
+			config.DB_HOST(),
+			config.DB_PORT(),
+			config.DB_NAME(),
+		)
+
+		// connStr = fmt.Sprintf("user=%s password=%s dbname=%s host=%s port=%s sslmode=disable",
+		// 	config.DB_USERNAME(),
+		// 	config.DB_PASSWORD(),
+		// 	config.DB_NAME(),
+		// 	config.DB_HOST(),
+		// 	config.DB_PORT(),
+		// )
+
+		db, err = sql.Open("postgres", connStr)
+	} else { // config.DB_TYPE() == "mysql"
+		connStr = fmt.Sprintf("mysql:%s:%s@tcp(%s:%s)/%s?parseTime=true",
+			config.DB_USERNAME(),
+			config.DB_PASSWORD(),
+			config.DB_HOST(),
+			config.DB_PORT(),
+			config.DB_NAME(),
+		)
+		db, err = sql.Open("mysql", connStr)
+	}
+
 	fmt.Println("Connection String:\n" + connStr)
-	db, err := sql.Open("mysql", connStr)
 	if err != nil {
 		fmt.Println("Error connecting to database")
 		panic(err)
@@ -41,18 +68,18 @@ var selectByEmail *sql.Stmt
 func initializeStatements() {
 	createMahasiswaTable = prepare(`
 CREATE TABLE IF NOT EXISTS mahasiswa (
-	id INT AUTO_INCREMENT PRIMARY KEY, 
+	id SERIAL PRIMARY KEY, 
 	username VARCHAR(255), 
 	email VARCHAR(255),
 	password VARCHAR(255), 
-	date_joined DATETIME, 
+	date_joined TIMESTAMP, 
 	nim VARCHAR(255)
 )`)
 	exec(createMahasiswaTable)
 
 	selectAllMahasiswa = prepare("SELECT * FROM mahasiswa")
-	insertNewMahasiswa = prepare("INSERT INTO mahasiswa (username, email, password, date_joined, nim) VALUES (?, ?, ?, ?, ?)")
-	selectByEmail = prepare("SELECT * FROM mahasiswa WHERE email = ?")
+	insertNewMahasiswa = prepare("INSERT INTO mahasiswa (username, email, password, date_joined, nim) VALUES ($1, $2, $3, $4, $5)")
+	selectByEmail = prepare("SELECT * FROM mahasiswa WHERE email = $1")
 }
 
 func prepare(statementStr string) *sql.Stmt {

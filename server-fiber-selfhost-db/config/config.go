@@ -23,3 +23,7 @@ func DB_NAME() string {
 func DB_HOST() string {
 	return GetEnv("DB_HOST")
 }
+
+func DB_TYPE() string {
+	return GetEnv("DB_TYPE")
+}

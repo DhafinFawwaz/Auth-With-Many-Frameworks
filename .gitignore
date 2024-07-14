@@ -1,4 +1,5 @@
 server-fiber-selfhost-db/data
+server-fiber-selfhost-db/postgres-data
 
 # venv
 venv/
